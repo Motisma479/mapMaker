@@ -1,38 +1,62 @@
-#include "common.hpp"
-#include"draw.hpp"
+#include <iostream>
+#include "raylib.h"
 
-int main()
+#include "resources.hpp"
+#include "game.hpp"
+
+int main(void)
 {
+    // INITIALIZATION.
+    //-------------------------------------------
+    InitWindow(1280, 970, "Project Jura");
+
     SetConfigFlags(FLAG_VSYNC_HINT);
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "mapMaker");
-    common::Game game;
-
-    game.gameState=0;
-
-    game.start.quit = new common::Button();
-    game.start.start = new common::Button();
-    game.editor.fileInfo.heightMinus = new common::Button();
-    game.editor.fileInfo.heightPlus = new common::Button();
-    game.editor.fileInfo.widthMinus = new common::Button();
-    game.editor.fileInfo.widthPlus = new common::Button();
-
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
+    
     SetTargetFPS(60);
+    
+    InitAudioDevice();
+    HideCursor();
+    //ToggleFullscreen();
+    
+    Game game;
+    Ui   ui(game);
+    
+    ui.Init();  
 
-    while (!WindowShouldClose() && !game.start.quit->isPressed)
+    //-------------------------------------------
+
+    // MAIN GAME LOOP.
+    //-------------------------------------------
+    
+    while(!WindowShouldClose()&& !game.needStop )
     {
-        game.mousePoint = GetMousePosition();
-        draw::draw(game);
+        ui.Update();
+        game.UpdateGame(ui);
+  
+        BeginDrawing();
+
+            BeginMode2D(ui.inGameCamera);
+
+                ClearBackground(WHITE);
+                ui.DrawRender(game.player);
+
+            EndMode2D();
+            ui.DrawOverlay(game.player);
+
+        EndDrawing();
     }
+    //-------------------------------------------
 
+    // DE-INITIALIZATION.
+    //-------------------------------------------
+    Resource::UnloadResource();
+    UnloadRenderTexture(ui.gameRenderTexture);
+
+    CloseAudioDevice();
+    
     CloseWindow();
-    delete(game.start.quit );
-
-    delete(game.start.start );
-
-    delete(game.editor.fileInfo.heightMinus );
-    delete(game.editor.fileInfo.heightPlus );
-    delete(game.editor.fileInfo.widthMinus );
-    delete(game.editor.fileInfo.widthPlus );
+    //-------------------------------------------
 
     return 0;
 }

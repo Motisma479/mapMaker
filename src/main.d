@@ -1,2 +1,2 @@
-src/main.o: src/main.cpp src/common.hpp third_party/include/raylib.h \
- src/utils.hpp src/draw.hpp
+src/main.o: src/main.cpp third_party/include/raylib.h src/resources.hpp \
+ src/game.hpp src/ui.hpp src/tilemap.hpp
