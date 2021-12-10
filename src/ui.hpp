@@ -6,7 +6,7 @@
 
 #include "tilemap.hpp"
 
-#define MAX_UI_TEX  18
+#define MAX_UI_TEX  20
 
 #define MAX_UI_SFX  2
 #define MAX_UI_FONT 1
@@ -141,9 +141,12 @@ public:
     bool hasPutInformation = false;
     FileData fileData;
 
-    int selectedTool = 0; // 0 = nothing, 1 = pencil, 2 = eraser;
+    int selectedTool = 0; // 0 = nothing, 1 = pencil, 2 = eraser, 3 = flag;
+    bool      uiHovered = false;
     int       onRightClick =0;
     int       onLeftClick =0;
+    bool      hudIsActive = true;
+
 
     float                            scroller               = 0.0f;
     float                            renderScale            = 1.0f;

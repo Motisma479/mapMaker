@@ -312,6 +312,8 @@ void Ui::Init()
     uiTexture[15] = Resource::GetTexture("./assets/tilemaps/tiles.png");
     uiTexture[16] = Resource::GetTexture("./assets/sprites/zoomPlus.png");
     uiTexture[17] = Resource::GetTexture("./assets/sprites/zoomMinus.png");
+    uiTexture[18] = Resource::GetTexture("./assets/sprites/information.png");
+    uiTexture[19] = Resource::GetTexture("./assets/sprites/flag.png");
     
 
     // Ui sfx initialization.
@@ -413,21 +415,21 @@ void Ui::DrawMainMenu()
                   {0, 0, (float)GetScreenWidth(), (float)GetScreenHeight()}, 
                   {0, 0}, 0, WHITE);
     DrawTexturePro(uiTexture[7], {0, 0, 518, 89}, 
-                   {(float)GetScreenWidth() / 2 - 428, (float)GetScreenHeight() / 3 - 150, 518, 89},
+                   {(float)GetScreenWidth() / 2 - 380, (float)GetScreenHeight() / 3 - 100, 418, 69},
                    {0, 0}, 0, WHITE);
-    DrawTextPro(uiFont[0],"Map Maker",(Vector2){(float)GetScreenWidth() / 2 - MeasureTextEx(uiFont[0],"Map Maker",225,1).x / 2, (float)GetScreenHeight() / 3 - 350},(Vector2){0,0},0,225 ,1,RED);
+    DrawTextPro(uiFont[0],"Map Editor",(Vector2){(float)(GetScreenWidth() / 2) - (MeasureTextEx(uiFont[0],"Map Editor",200,0).x / 2), (float)GetScreenHeight() / 3 - 300},(Vector2){0,0},0,200 ,0,RED);
     
     
     // Buttons creation.
     Button b_play(80, "Start Editor", WHITE, 
                  {(float)GetScreenWidth() /2 - 225,
-                  (float)GetScreenHeight() / 3,
+                  (float)GetScreenHeight() / 3+100,
                   450  ,
                   100},
                  uiTexture[8], uiFont[0]);
     Button b_quit(80, "QUIT", WHITE,
                    {(float)GetScreenWidth() /2 - 125,
-                    (float)GetScreenHeight() / 3 + 150, 
+                    (float)GetScreenHeight() / 3 + 250, 
                     250,
                     100},
                     uiTexture[8], uiFont[0]);
@@ -446,25 +448,25 @@ void Ui::DrawSelectMenu()
 {  
     Button widthPlus(80, "+", WHITE, 
                  {(float)GetScreenWidth() /2 - 425,
-                  (float)GetScreenHeight() / 3,
+                  (float)GetScreenHeight() / 3 +50,
                   200  ,
                   100},
                  uiTexture[8], uiFont[0]);
     Button widthMinus(80, "-", WHITE, 
                  {(float)GetScreenWidth() /2 + 225,
-                  (float)GetScreenHeight() / 3,
+                  (float)GetScreenHeight() / 3+50,
                   200  ,
                   100},
                  uiTexture[8], uiFont[0]);
     Button heightPlus(80, "+", WHITE, 
                  {(float)GetScreenWidth() /2 - 425,
-                  (float)GetScreenHeight() / 3+250,
+                  (float)GetScreenHeight() / 3+300,
                   200  ,
                   100},
                  uiTexture[8], uiFont[0]);
     Button heightMinus(80, "-", WHITE, 
                  {(float)GetScreenWidth() /2 + 225,
-                  (float)GetScreenHeight() / 3+250,
+                  (float)GetScreenHeight() / 3+300,
                   200  ,
                   100},
                  uiTexture[8], uiFont[0]);
@@ -476,21 +478,21 @@ void Ui::DrawSelectMenu()
                  uiTexture[8], uiFont[0]);
 
         fileData.textBox.x = (float)GetScreenWidth() /2 -200;
-        fileData.textBox.y = (float)GetScreenHeight() /2 - 380;
+        fileData.textBox.y = (float)GetScreenHeight() /2 - 250;
         fileData.textBox.width = 400;
         fileData.textBox.height = 80;
 
     DrawTexturePro(uiTexture[6], {0, 0, 1024, 768}, {0, 0, (float)GetScreenWidth(), (float)GetScreenHeight()}, {0, 0}, 0, WHITE);
-    DrawTextEx(uiFont[0], "File Information", {(float)GetScreenWidth() / 2 - MeasureTextEx(uiFont[0], "File Information", 100, 0).x / 2, 100}, 100, 0, WHITE);
+    DrawTextEx(uiFont[0], "File Information", {(float)GetScreenWidth() / 2 - MeasureTextEx(uiFont[0], "File Information", 100, 0).x / 2, 50}, 100, 0, WHITE);
     
-    DrawText("File name:", (float)GetScreenWidth() /2 -200, (float)GetScreenHeight() /2 - 420, 30, WHITE);
+    DrawText("File name:", (float)GetScreenWidth() /2 -200, (float)GetScreenHeight() /2 - 290, 30, WHITE);
 
     DrawRectangleRec(fileData.textBox, LIGHTGRAY);
 
     if (fileData.canWriteInBox) DrawRectangleLines((int)fileData.textBox.x, (int)fileData.textBox.y, (int)fileData.textBox.width, (int)fileData.textBox.height, RED);
     else DrawRectangleLines((int)fileData.textBox.x, (int)fileData.textBox.y, (int)fileData.textBox.width, (int)fileData.textBox.height, DARKGRAY);
     DrawText(fileData.name, (int)fileData.textBox.x + 5, (int)fileData.textBox.y + 8, 65, MAROON);
-    DrawText(TextFormat("%i/%i", fileData.letterCount, 9), (float)GetScreenWidth() /2 +215, (float)GetScreenHeight() /2 - 320, 25, GRAY);
+    DrawText(TextFormat("%i/%i", fileData.letterCount, 9), (float)GetScreenWidth() /2 +215, (float)GetScreenHeight() /2 - 190, 25, GRAY);
     if (fileData.canWriteInBox)
     {
         if (fileData.letterCount < 9)
@@ -499,15 +501,16 @@ void Ui::DrawSelectMenu()
             DrawText("_", (int)fileData.textBox.x + 8 + MeasureText(fileData.name, 65), (int)fileData.textBox.y + 12, 65, MAROON);
         }
     }
-    DrawText("Width:", GetScreenWidth() /2 - MeasureTextEx(GetFontDefault(), "Width", 35, 0).x/2, GetScreenHeight() / 3 - 25, 35, WHITE);
+    
+    DrawText("Width:", GetScreenWidth() /2 - MeasureTextEx(GetFontDefault(), "Width", 35, 0).x/2, GetScreenHeight() / 3 + 25, 35, WHITE);
     widthMinus.Draw(cState);
-    DrawText(TextFormat("%d",fileData.width), GetScreenWidth() /2 - MeasureTextEx(GetFontDefault(), TextFormat("%d",fileData.width), 46, 0).x/2, GetScreenHeight() / 3+20, 46, WHITE);
+    DrawText(TextFormat("%d",fileData.width), GetScreenWidth() /2 - MeasureTextEx(GetFontDefault(), TextFormat("%d",fileData.width), 46, 0).x/2, GetScreenHeight() / 3+70, 46, WHITE);
     widthPlus.Draw(cState);
 
 
-    DrawText("Height:", GetScreenWidth() /2 - MeasureTextEx(GetFontDefault(), "Height", 35, 0).x/2, GetScreenHeight() / 3+230, 35, WHITE);
+    DrawText("Height:", GetScreenWidth() /2 - MeasureTextEx(GetFontDefault(), "Height", 35, 0).x/2, GetScreenHeight() / 3+280, 35, WHITE);
     heightMinus.Draw(cState);
-    DrawText(TextFormat("%d",fileData.height), GetScreenWidth() /2 - MeasureTextEx(GetFontDefault(), TextFormat("%d",fileData.height), 46, 0).x/2, GetScreenHeight() / 3+275, 46, WHITE);
+    DrawText(TextFormat("%d",fileData.height), GetScreenWidth() /2 - MeasureTextEx(GetFontDefault(), TextFormat("%d",fileData.height), 46, 0).x/2, GetScreenHeight() / 3+325, 46, WHITE);
     heightPlus.Draw(cState);
             
     if (fileData.saveTryEmpty)
@@ -563,7 +566,7 @@ void Ui::DrawSelectMenu()
     if (widthPlus.IsClicked(cState))
     {
         fileData.width++;
-        if(fileData.width>50) fileData.width=50;
+        if(fileData.width>40) fileData.width=40;
     }
     if (widthMinus.IsClicked(cState))
     {
@@ -576,7 +579,7 @@ void Ui::DrawSelectMenu()
     if (heightPlus.IsClicked(cState))
     {
         fileData.height++;
-        if(fileData.height>50) fileData.height=50;
+        if(fileData.height>40) fileData.height=40;
     }
     if (heightMinus.IsClicked(cState))
     {
@@ -625,8 +628,9 @@ void Ui::DrawSelectMenu()
 void Ui::DrawInGame()
 {
     // Drawing tilemap.
+    
+    if(!uiHovered) gameRef.tm.Update(selectedTool, inGameCamera.zoom, inGameCamera.offset.x, inGameCamera.offset.y, onRightClick, onLeftClick);
     gameRef.tm.Draw();
-
     // Drawing entities.
     //for (auto entity : gameRef.GetEntities()) entity->Draw();
 
@@ -634,107 +638,128 @@ void Ui::DrawInGame()
 
 void Ui::DrawHUD(Player player)
 {
-    TilePaint paint({0,(float)(GetScreenHeight()-(uiTexture[15].height *1.5)),128*1.5,224*1.5},uiTexture[15], 32);
-
-    TexturedButton saver({0,0,50,50},uiTexture[14]);
+    if (IsKeyPressed(KEY_LEFT_CONTROL))
+    {
+        if (hudIsActive)
+        {
+            hudIsActive = false;
+            uiHovered = false;
+        }
+        else{
+            hudIsActive = true;
+        }
+        
+    }
     
-    TexturedButton eraser({0,100,50,50},uiTexture[12]);
-    if (selectedTool == 2) eraser.isActive = true;
 
-    TexturedButton writer({0,50,50,50},uiTexture[13]);
-    if (selectedTool == 1) writer.isActive = true;
+    if (hudIsActive)
+    {
+        TilePaint paint({0,(float)(GetScreenHeight()-(uiTexture[15].height *1.5)),128*1.5,224*1.5},uiTexture[15], 32);
+        TexturedButton saver({0,0,50,50},uiTexture[14]);
+        TexturedButton eraser({0,100,50,50},uiTexture[12]);
+        if (selectedTool == 2) eraser.isActive = true;
+        TexturedButton writer({0,50,50,50},uiTexture[13]);
+        if (selectedTool == 1) writer.isActive = true;
+        TexturedButton zoomPlus({50,0,50,50},uiTexture[16]);
+        TexturedButton zoomMinus({100,0,50,50},uiTexture[17]);
 
-    TexturedButton zoomPlus({50,0,50,50},uiTexture[16]);
-    TexturedButton zoomMinus({100,0,50,50},uiTexture[17]);
+        TexturedButton inforamtion({(float)GetScreenWidth()-50,0,50,50},uiTexture[18]);
+        TexturedButton flag({0,150,50,50},uiTexture[19]);
+        if (selectedTool == 3) flag.isActive = true;
 
-    
-
-    //! DEBUG ZONE ========================================================
-
-    // DrawText(TextFormat("ROUND:\nrId: %d\npatternId: %d\nprofit: %d\nremaning: %d\n spawned: %d\nframerate: %d/%d\n", 
-    //                     gameRef.gameRound.rId,
-    //                     gameRef.gameRound.patternId,
-    //                     gameRef.gameRound.profit,
-    //                     gameRef.gameRound.remainingEnemies,
-    //                     gameRef.gameRound.spawnedEnemyCounter,
-    //                     gameRef.gameRound.spawnFrameCounter,
-    //                     gameRef.gameRound.spawnRate),
-    //         10, 10, 25, RED);
-
-    //! ===================================================================
-
-    //TODO REMOVE
-   /*  DrawTexturePro(uiTexture[13], {0, 0, (float)uiTexture[13].width, (float)uiTexture[13].height}, 
-                  {0, 
-                   (float)GetScreenHeight() - uiTexture[13].height * GetScreenWidth() / uiTexture[13].width, 
-                   (float)GetScreenWidth(), 
-                   (float)uiTexture[13].height * GetScreenWidth() / uiTexture[13].width}, 
-                   {0, 0}, 0, WHITE); */
         DrawTexturePro(paint.tileTexture,{paint.originalPostion[onRightClick].x,paint.originalPostion[onRightClick].y,32,32},{paint.rec.x+50,paint.rec.y-60,50,50},{0,0},0,WHITE);
         DrawRectangleLinesEx({paint.rec.x+50,paint.rec.y-60,50,50},3,DARKGRAY);
         DrawTexturePro(paint.tileTexture,{paint.originalPostion[onLeftClick].x,paint.originalPostion[onLeftClick].y,32,32},{paint.rec.x+15,paint.rec.y-80,50,50},{0,0},0,WHITE);
-        DrawRectangleLinesEx({paint.rec.x+15,paint.rec.y-80,50,50},3,DARKGRAY);
-        
-    paint.Draw(cState);
-    
+        DrawRectangleLinesEx({paint.rec.x+15,paint.rec.y-80,50,50},3,DARKGRAY);        
 
-    if (writer.IsClicked(cState))
-    {
-        selectedTool = 1;
-        printf("clicked");
-        
-    }else if (eraser.IsClicked(cState))
-    {
-        selectedTool = 2;
-        eraser.isActive = true ;
-    }
-    if (zoomPlus.IsClicked(cState))
-    {
-        inGameCamera.zoom += 0.1;
-        if (inGameCamera.zoom > 5.0)
+        if (writer.IsClicked(cState))
         {
-            inGameCamera.zoom = 5.0;
+            selectedTool = 1;
+            //printf("clicked");
+            
+        }else if (eraser.IsClicked(cState))
+        {
+            selectedTool = 2;
+            //eraser.isActive = true ;
+        }else if(flag.IsClicked(cState)){
+            selectedTool = 3;
         }
-        
-    }
-    if (zoomMinus.IsClicked(cState))
-    {
-        inGameCamera.zoom -= 0.1;
-        if (inGameCamera.zoom < 1.0)
+        if (zoomPlus.IsClicked(cState))
         {
-            inGameCamera.zoom = 1.0;
-        }
-        
-    }
-    
-    if (paint.IsRClicked(cState))
-    {
-        for (int i = 0; i<((paint.tileTexture.width/paint.tilesize)*(paint.tileTexture.height/paint.tilesize)); i++)
-        {
-            if(CheckCollisionPointRec(GetMousePosition(), paint.tileList[i])){
-                onRightClick = i;
+            inGameCamera.zoom += 0.1;
+            if (inGameCamera.zoom > 5.0)
+            {
+                inGameCamera.zoom = 5.0;
             }
+            
         }
-        cout <<onRightClick<< endl;
-    }
-    if (paint.IsLClicked(cState))
-    {
-        for (int i = 0; i<((paint.tileTexture.width/paint.tilesize)*(paint.tileTexture.height/paint.tilesize)); i++)
+        if (zoomMinus.IsClicked(cState))
         {
-            if(CheckCollisionPointRec(GetMousePosition(), paint.tileList[i])){
-                onLeftClick = i;
-                        
+            inGameCamera.zoom -= 0.1;
+            if (inGameCamera.zoom < 1.0)
+            {
+                inGameCamera.zoom = 1.0;
             }
+            
         }
-        cout <<onLeftClick<< endl;
-    }
-    
+        
+        if (paint.IsRClicked(cState))
+        {
+            for (int i = 0; i<((paint.tileTexture.width/paint.tilesize)*(paint.tileTexture.height/paint.tilesize)); i++)
+            {
+                if(CheckCollisionPointRec(GetMousePosition(), paint.tileList[i])){
+                    onRightClick = i;
+                }
+            }
+            cout <<onRightClick<< endl;
+        }
+        if (paint.IsLClicked(cState))
+        {
+            for (int i = 0; i<((paint.tileTexture.width/paint.tilesize)*(paint.tileTexture.height/paint.tilesize)); i++)
+            {
+                if(CheckCollisionPointRec(GetMousePosition(), paint.tileList[i])){
+                    onLeftClick = i;
+                            
+                }
+            }
+            cout <<onLeftClick<< endl;
+        }
+        
+        if (paint.IsHovered(cState)||saver.IsHovered(cState)||writer.IsHovered(cState)||eraser.IsHovered(cState)||zoomPlus.IsHovered(cState)||zoomMinus.IsHovered(cState)||inforamtion.IsHovered(cState)||flag.IsHovered(cState)){
+            uiHovered = true;
+        }else{
+            uiHovered = false;
+        }
 
-    saver.Draw(cState);
-    writer.Draw(cState);
-    eraser.Draw(cState);
-    zoomPlus.Draw(cState);
-    zoomMinus.Draw(cState);
+        if (inforamtion.IsHovered(cState))
+        {
+            Rectangle shortcutInformaton = {inforamtion.rec.x-200,inforamtion.rec.y+50,200,200};
+            
+            DrawRectangleRec(shortcutInformaton,{191,191,191,255});
+            DrawRectangleLinesEx(shortcutInformaton,3,{75,75,75,255});
+            DrawTextPro(GetFontDefault(),"Left Ctrl to hide HUD",{shortcutInformaton.x+15,shortcutInformaton.y+15},{0,0},0,17.5,1,{75,75,75,255});
+            
+        }
+
+        if (saver.IsClicked(cState))
+        {
+            gameRef.tm.Save();
+        }
+        
+        
+
+        paint.Draw(cState);
+        saver.Draw(cState);
+        writer.Draw(cState);
+        eraser.Draw(cState);
+        zoomPlus.Draw(cState);
+        zoomMinus.Draw(cState);
+        zoomMinus.Draw(cState);
+        inforamtion.Draw(cState);
+        flag.Draw(cState);
+    }
+    
+    
     
 }
 
@@ -791,7 +816,7 @@ void Ui::Update()
     switch (sId)
     {
     case SceneId::LOADING:
-        gameRef.tm.Init(fileData.width,fileData.height);
+        gameRef.tm.Init(fileData.width,fileData.height, uiTexture->width, uiTexture->height,fileData.name);
         inGameCamera.zoom = 3.0f;
         break;
 

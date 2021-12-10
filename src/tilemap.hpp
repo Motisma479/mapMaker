@@ -4,6 +4,7 @@
 #include "raylib.h"
 
 #define TILE_SIZE 32
+#define MAX_TILE 28
 
 using namespace std;
 
@@ -23,10 +24,10 @@ enum class TileType
         PLAINS_V_PATH,      // 1:  Plains vertical path       
         PLAINS_H_PATH,      // 2:  Plains horizontal path    
         PLAINS_C_ROAD,      // 3:  Plains crossroad              
-        PLAINS_RD_PATH,     // 4:  Plains right-down path        
-        PLAINS_LD_PATH,     // 5:  Plains left-down path         
-        PLAINS_RU_PATH,     // 6:  Plains right-up path          
-        PLAINS_LU_PATH,     // 7:  Plains left-up path     
+        PLAINS_LD_PATH,     // 4:  Plains right-down path        
+        PLAINS_RD_PATH,     // 5:  Plains left-down path         
+        PLAINS_LU_PATH,     // 6:  Plains left-up path          
+        PLAINS_RU_PATH,     // 7:  Plains right-up path     
         COBBLE_TL_CORNER,   // 8:  Cobble top-left corner
         COBBLE_T_CORNER,    // 9:  Cobble top corner
         COBBLE_TR_CORNER,   // 10: Cobble top-right corner
@@ -43,16 +44,12 @@ enum class TileType
         COBBLE_TR_INNER,    // 21: Cobble top-right inner
         DUNGEON_TL_CORNER,  // 22: Dungeon top-left corner
         DUNGEON_TR_CORNER,  // 23: Dungeon top-right corner
-        COBBLE_L_INNER,     // 24: Cobble left inner
-        COBBLE_GRASS_INNER, // 25: Cobble grass inner
-        COBBLE_R_INNER,     // 26: Cobble right inner
-        DUNGEON_RD_CORNER,  // 27: Dungeon right-down corner
-        DUNGEON_LD_CORNER,  // 28: Dungeon left-down corner
-        COBBLE_BL_INNER,    // 29: Cobble bottom-left corner
-        COBBLE_BR_INNER,    // 30: Cobble bottom-right corner
-        DUNGEON_RU_CORNER,  // 31: Dungeon right-up corner
-        DUNGEON_LU_CORNER,  // 32: Dungeon left-up corner
-        VOID                // Void tile current: 33
+        COBBLE_BL_INNER,    // 24: Cobble left inner
+        COBBLE_BR_INNER,    // 25: Cobble right inner
+        DUNGEON_BL_CORNER,  // 26: Dungeon top-left corner
+        DUNGEON_BR_CORNER,  // 27: Dungeon top-right corner
+        VOID                // Void tile
+
 };
 
 class Tile
@@ -85,18 +82,19 @@ public:
     int             height;
     string          name;
     Vector2         origin;
-    Texture2D       terrain[12];
+    Texture2D       terrain[MAX_TILE];
     vector<Tile*>   tiles;
     vector<Vector2> enemyPath;
     
 
     // Constructors / Destructors.
     TileMap() {}
-    TileMap(string _name);
+    TileMap(string _name):name("Default"){}
     ~TileMap();
 
     // Methods.
-    void          Init(int mWidth, int mHeight);
-    void          Update();
-    void          Draw();
+    void        Init(int mWidth, int mHeight,int textureWidth, int textureHeight,const string &fileName);
+    void        Update(int toolState, float zoom, float camX, float camY, int RClick, int LClick);
+    void        Draw();
+    void        Save();         
 };
