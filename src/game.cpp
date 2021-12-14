@@ -116,11 +116,7 @@ void Game::AddEnemy(class Enemy* enemy)
     mEnemies.emplace_back(enemy);
 }
 
-void Game::RemoveEnemy(class Enemy* enemy)
-{
-    auto iter = find(mEnemies.begin(), mEnemies.end(), enemy);
-    mEnemies.erase(iter);
-}
+
 
 std::vector<class Enemy*>& Game::GetEnemies()
 {
