@@ -54,7 +54,7 @@ void Tile::Update(){
 // -------- CONSTRUCTORS / DSETRUCTORS ------- //
 TileMapEditor::TileMapEditor()
 {
-    start = mEnd = false;
+    mStart = mEnd = false;
 }
 
 TileMapEditor::~TileMapEditor()
@@ -146,7 +146,7 @@ void TileMapEditor::Update(int toolState, int RClick, int LClick, Camera2D& came
             {
                 if(CheckCollisionPointRec(GetScreenToWorld2D(GetMousePosition(), camera),mTiles[i]->mRec))
                 {
-                    if (mTiles[i]->mState == TileState::S_ENMY) start = false;
+                    if (mTiles[i]->mState == TileState::S_ENMY) mStart = false;
                     if (mTiles[i]->mState == TileState::E_ENMY) mEnd   = false;
                     
                     mTiles[i]->mType = TileType::PLAINS_GRASS;
@@ -172,7 +172,7 @@ void TileMapEditor::Update(int toolState, int RClick, int LClick, Camera2D& came
     // Flag tool update.
     if (toolState == 3)
     {
-        if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && !start)
+        if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && !mStart)
         {
             for (int i = 0; i < mWidth * mHeight; i++)
             {
@@ -181,7 +181,7 @@ void TileMapEditor::Update(int toolState, int RClick, int LClick, Camera2D& came
                     if (mTiles[i]->mState == TileState::ENMY)
                     {
                         mTiles[i]->mState = TileState::S_ENMY;
-                        start = true;                        
+                        mStart = true;                        
                     }
                 }
             }
@@ -239,40 +239,43 @@ void TileMapEditor::Draw()
 
 void TileMapEditor::Save()
 {
-    int state_tmp(0), type_tmp(0), id_tmp(0);
-
-    string imageName = {"./levels/" + mName + ".png"};
-    TakeScreenshot(imageName.c_str());
-
-    // Load the map file acccording to map name.
-    string path = {"./levels/" + mName + ".map"};
-    ofstream fs{path.c_str()};       
-
-    if(fs.is_open() && start && mEnd)
+    if (mStart && mEnd)
     {
-        fs << mWidth << " " << mHeight << endl;
+        int state_tmp(0), type_tmp(0), id_tmp(0);
 
-        for (int i = 0; i < mHeight; i++)
+        string imageName = {"./levels/" + mName + ".png"};
+        TakeScreenshot(imageName.c_str());
+
+        // Load the map file acccording to map name.
+        string path = {"./levels/" + mName + ".map"};
+        ofstream fs{path.c_str()};       
+
+        if(fs.is_open())
         {
-            for (int j = 0; j < mWidth; j++)
+            fs << mWidth << " " << mHeight << endl;
+
+            for (int i = 0; i < mHeight; i++)
             {
+                for (int j = 0; j < mWidth; j++)
+                {
 
-                state_tmp = (int)mTiles[id_tmp]->mState;
-                type_tmp = (int)mTiles[id_tmp]->mType;
+                    state_tmp = (int)mTiles[id_tmp]->mState;
+                    type_tmp = (int)mTiles[id_tmp]->mType;
 
-                fs << state_tmp; fs << ":" << type_tmp;
-                if (j + 1 < mWidth) fs << ",";
-                
-                id_tmp++;
+                    fs << state_tmp; fs << ":" << type_tmp;
+                    if (j + 1 < mWidth) fs << ",";
+                    
+                    id_tmp++;
+                }
+                fs << endl;
             }
-            fs << endl;
+        
         }
-    
+        fs.close();
     }
     else
     {
-        cout << "ERROR: Can't save the map." << endl;
+        mErrorCounter = 120;
     }
 
-    fs.close();
 }

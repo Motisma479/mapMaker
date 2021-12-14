@@ -81,7 +81,7 @@ class TileMapEditor
 {
 public:
     // Attributes.
-    bool            start;
+    bool            mStart;
     bool            mEnd;
     int             mWidth;
     int             mHeight;

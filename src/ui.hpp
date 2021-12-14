@@ -20,31 +20,6 @@ struct Animation
 enum class SceneId
 { INTRO, MAIN_MENU, SELECT_MENU, LOADING, IN_GAME };
 
-enum class CursorState
-{ NORMAL, POINTING, GRABBING };
-
-// Classes.
-class LevelContainer
-{
-public:
-    // Attributes.
-    string      txt;
-    Rectangle   rec;
-    Texture2D   tex;
-    Font        fnt;
-
-    // Constructors / destructors.
-    LevelContainer() {}
-    LevelContainer(string _txt, Rectangle _rec, Texture2D _tex, Font _fnt);
-    ~LevelContainer() {}
-
-    // Methods.
-    bool IsHovered(CursorState& state);
-    bool IsClicked(CursorState& state);
-    void Update();
-    void Display(CursorState& state, float scroller);
-};
-
 class Button
 {
 public:
@@ -66,9 +41,9 @@ public:
     ~Button() {}
 
     // Methods.
-    bool IsHovered(CursorState& state);
-    bool IsClicked(CursorState& state);
-    void Draw(CursorState& state);
+    bool IsHovered();
+    bool IsClicked();
+    void Draw();
 };
 
 
@@ -104,11 +79,11 @@ public:
   ~TilePaint() {}
 
   // Methods.
-  bool IsHovered(CursorState& state);
-  bool IsRClicked(CursorState& state);
+  bool IsHovered();
+  bool IsRClicked();
 
-  bool IsLClicked(CursorState& state);
-  void Draw(CursorState& state);
+  bool IsLClicked();
+  void Draw();
 };
 
 class Ui
@@ -127,7 +102,6 @@ public:
     bool             mUiHovered;
     SceneId          mSId;
     struct Animation aIntro;
-    CursorState      cState;
     Camera2D         mInGameCamera;
     Texture2D        mUiTexture[MAX_UI_TEX];
     Sound            mUiSfx[MAX_UI_SFX];

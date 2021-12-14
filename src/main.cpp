@@ -8,16 +8,12 @@ int main(void)
 {
     // INITIALIZATION.
     //-------------------------------------------
-    InitWindow(1280, 970, "Project Jura");
+    InitWindow(1280, 970, "Level Editor");
 
     SetConfigFlags(FLAG_VSYNC_HINT);
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     
     SetTargetFPS(60);
-    
-    InitAudioDevice();
-    HideCursor();
-    //ToggleFullscreen();
     
     Game game;
     Ui   ui(game);
@@ -50,7 +46,6 @@ int main(void)
     // DE-INITIALIZATION.
     //-------------------------------------------
     Resource::UnloadResource();
-    CloseAudioDevice();
     
     CloseWindow();
     //-------------------------------------------

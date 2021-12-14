@@ -31,24 +31,23 @@ Button::Button(int _fs, string _text, Color _tc, Rectangle _rec, Texture2D _tex,
 {
 }
 
-bool Button::IsHovered(CursorState& state)
+bool Button::IsHovered()
 {
-    if(CheckCollisionPointRec(GetMousePosition(), rec)) state = CursorState::POINTING;
     return CheckCollisionPointRec(GetMousePosition(), rec);
 }
 
-bool Button::IsClicked(CursorState& state)
+bool Button::IsClicked()
 {
-    if(isClickable && IsHovered(state) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) return true;
+    if(isClickable && IsHovered() && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) return true;
     return false;
 }
 
-void Button::Draw(CursorState& state)
+void Button::Draw()
 {
     // Texture drawing.
     if(displayTexture)
     {
-        if (IsHovered(state))
+        if (IsHovered())
         {
             DrawTexturePro(tex, {0, 0, (float)tex.width, (float)tex.height}, rec, {0, 0}, 0, {255, 255, 255, 200});
             DrawTextPro(font,text.c_str(),
@@ -99,15 +98,23 @@ TilePaint::TilePaint(Rectangle _rec, Texture2D _tex, int sizeOfTile)
     
 }
 
-bool TilePaint::IsHovered(CursorState& state)
+bool TilePaint::IsHovered()
 {
-    if(CheckCollisionPointRec(GetMousePosition(), rec)) state = CursorState::POINTING;
     return CheckCollisionPointRec(GetMousePosition(), rec);
 }
 
-bool TilePaint::IsRClicked(CursorState& state)
+bool TilePaint::IsRClicked()
 {
-    if(isClickable && IsHovered(state) && IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)){
+    if (isClickable && IsHovered() && IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)){
+        
+        return true;
+    };
+    return false;
+}
+
+bool TilePaint::IsLClicked()
+{
+    if(isClickable && IsHovered() && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
         
         return true;
     };
@@ -115,22 +122,12 @@ bool TilePaint::IsRClicked(CursorState& state)
     return false;
 }
 
-bool TilePaint::IsLClicked(CursorState& state)
-{
-    if(isClickable && IsHovered(state) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
-        
-        return true;
-    };
-    
-    return false;
-}
-
-void TilePaint::Draw(CursorState& state)
+void TilePaint::Draw()
 {
     // Texture drawing.
     if(displayTexture)
     {
-        if (IsHovered(state))
+        if (IsHovered())
         {
             DrawTexturePro(tileTexture, {0, 0, (float)tileTexture.width, (float)tileTexture.height}, rec, {0, 0}, 0, WHITE);
             for (int i = 0; i<((tileTexture.width/tilesize)*(tileTexture.height/tilesize)); i++)
@@ -164,7 +161,6 @@ Ui::Ui(Game& game)
     mUiHovered     = false;
     mSId           = SceneId::INTRO;
     aIntro        = {0, 450};
-    cState        = CursorState::NORMAL;
     mInGameCamera = {{0, 0}, {0, 0}, 0, 1};
 }
 
@@ -297,12 +293,12 @@ void Ui::DrawMainMenu()
                     mUiTexture[8], mUiFont);
     
     // Buttons draw.
-    b_play.Draw(cState);
-    b_quit.Draw(cState);
+    b_play.Draw();
+    b_quit.Draw();
 
     // Buttons scripting.
-    if (b_play.IsClicked(cState)) mSId              = SceneId::SELECT_MENU;
-    if (b_quit.IsClicked(cState)) mGameRef.needStop = true;
+    if (b_play.IsClicked()) mSId              = SceneId::SELECT_MENU;
+    if (b_quit.IsClicked()) mGameRef.needStop = true;
 }
 
 void Ui::DrawEditorMenu()
@@ -317,28 +313,28 @@ void Ui::DrawEditorMenu()
     Button heightMinus(80, "-",     WHITE, {(float)GetScreenWidth() /2 + 225, (float)GetScreenHeight() / 3 + 300, 200, 100}, mUiTexture[8], mUiFont);
     Button validate(80, "Validate", WHITE, {(float)GetScreenWidth() /2 - 225, (float)GetScreenHeight() / 3 + 500, 450, 100}, mUiTexture[8], mUiFont);
 
-    widthMinus.Draw(cState);
-    widthPlus.Draw(cState);
-    heightMinus.Draw(cState);
-    heightPlus.Draw(cState);
+    widthMinus.Draw();
+    widthPlus.Draw();
+    heightMinus.Draw();
+    heightPlus.Draw();
 
-    if (widthPlus.IsClicked(cState))
+    if (widthPlus.IsClicked())
     {
         fileData.width++;
         if(fileData.width > 40) fileData.width = 40;
     }
-    if (widthMinus.IsClicked(cState))
+    if (widthMinus.IsClicked())
     {
         fileData.width--;
         if(fileData.width < 14) fileData.width = 14;
     } 
 
-    if (heightPlus.IsClicked(cState))
+    if (heightPlus.IsClicked())
     {
         fileData.height++;
         if(fileData.height > 40) fileData.height = 40;
     }
-    if (heightMinus.IsClicked(cState))
+    if (heightMinus.IsClicked())
     {
         fileData.height--;
         if(fileData.height < 12) fileData.height = 12;
@@ -390,7 +386,7 @@ void Ui::DrawEditorMenu()
         DrawText("Please use only ( 0-9 a-z A-Z _ ). ", (float)GetScreenWidth() /2 - 225,
                   (float)GetScreenHeight() / 3 + 465, 30, RED);
     }
-    validate.Draw((cState));
+    validate.Draw();
     
     // Text box update.
     if (CheckCollisionPointRec(GetMousePosition(), fileData.textBox) && IsMouseButtonDown(MOUSE_LEFT_BUTTON)) 
@@ -433,7 +429,7 @@ void Ui::DrawEditorMenu()
         }
         else SetMouseCursor(MOUSE_CURSOR_DEFAULT);
 
-        if(validate.IsClicked(cState))
+        if(validate.IsClicked())
         {
             if (fileData.name[0]!='\0')
             {
@@ -503,29 +499,29 @@ void Ui::DrawHUD()
              
 
         // Update HUD buttons.
-        if (writer.IsClicked(cState))      selectedTool = 1;
-        else if (eraser.IsClicked(cState)) selectedTool = 2;
-        else if(flag.IsClicked(cState))    selectedTool = 3;
+        if (writer.IsClicked())      selectedTool = 1;
+        else if (eraser.IsClicked()) selectedTool = 2;
+        else if(flag.IsClicked())    selectedTool = 3;
             
-        if (paint.IsRClicked(cState))
+        if (paint.IsRClicked())
         {
             for (int i = 0; i < ((paint.tileTexture.width / paint.tilesize) * (paint.tileTexture.height / paint.tilesize)); i++)
                 if(CheckCollisionPointRec(GetMousePosition(), paint.tileList[i])) 
                     onRightClick = i;
         }
-        if (paint.IsLClicked(cState))
+        if (paint.IsLClicked())
         {
             for (int i = 0; i<((paint.tileTexture.width / paint.tilesize) * (paint.tileTexture.height / paint.tilesize)); i++)
                 if(CheckCollisionPointRec(GetMousePosition(), paint.tileList[i]))
                     onLeftClick = i;
         }
         
-        if (paint.IsHovered(cState)      ||
-            saver.IsHovered(cState)      ||
-            writer.IsHovered(cState)     ||
-            eraser.IsHovered(cState)     ||
-            information.IsHovered(cState)||
-            flag.IsHovered(cState))
+        if (paint.IsHovered()      ||
+            saver.IsHovered()      ||
+            writer.IsHovered()     ||
+            eraser.IsHovered()     ||
+            information.IsHovered()||
+            flag.IsHovered())
         {
             mUiHovered = true;
         }
@@ -534,19 +530,19 @@ void Ui::DrawHUD()
             mUiHovered = false;
         }
 
-        if (information.IsHovered(cState))
+        if (information.IsHovered())
         {
-            Rectangle shortcutInformaton = {information.rec.x - 200,information.rec.y + 50, 200, 200};
+            Rectangle shortcutInformaton = {information.rec.x - 250,information.rec.y + 50, 250, 100};
             
             DrawRectangleRec(shortcutInformaton, {191, 191, 191, 255});
             DrawRectangleLinesEx(shortcutInformaton, 3, {75, 75, 75 ,255});
-            DrawTextPro(GetFontDefault(),"Left Ctrl to hide HUD",
+            DrawTextPro(GetFontDefault(),"Left Ctrl to hide HUD\nMMB to move camera",
                         {shortcutInformaton.x + 15, shortcutInformaton.y + 15},
-                        {0, 0}, 0, 17.5, 1, {75, 75, 75, 255});
+                        {0, 0}, 0, 20, 1, {75, 75, 75, 255});
             
         }
 
-        if (saver.IsClicked(cState))
+        if (saver.IsClicked())
         {
             mGameRef.mTm.Save();
         }
@@ -559,12 +555,12 @@ void Ui::DrawHUD()
                                          {paint.rec.x + 15, paint.rec.y - 80, 50, 50}, {0, 0}, 0, WHITE);
         DrawRectangleLinesEx({paint.rec.x + 15, paint.rec.y - 80, 50, 50}, 3, DARKGRAY); 
 
-        paint.Draw(cState);
-        saver.Draw(cState);
-        writer.Draw(cState);
-        eraser.Draw(cState);
-        information.Draw(cState);
-        flag.Draw(cState);
+        paint.Draw();
+        saver.Draw();
+        writer.Draw();
+        eraser.Draw();
+        information.Draw();
+        flag.Draw();
 
         // Draw active rectangle.
         switch(selectedTool)
@@ -578,6 +574,15 @@ void Ui::DrawHUD()
             case 3:
                 DrawRectangleLinesEx(flag.rec, 4, RED);
                 break;
+        }
+
+        // Draw save error message.
+        if (mGameRef.mTm.mErrorCounter >= 0)
+        {
+            DrawTextEx(mUiFont, "Please place a starting and an ending tile with flag tool.",
+                      {(float)GetScreenWidth() / 2 - MeasureTextEx(mUiFont, "Please place a starting and an ending tile with flag tool.", 45, 0).x / 2, 0},
+                      45, 0, RED);
+            mGameRef.mTm.mErrorCounter--;
         }
     }
 }
@@ -606,9 +611,6 @@ void Ui::DrawOverlay()
     default:
         break;
     }   
-
-    // Draw cursor according to it state.
-    DrawTextureEx(mUiTexture[9 + (int)cState], GetMousePosition(), 0, 3, WHITE);
 }
 
 void Ui::IsCameraOut()
@@ -646,7 +648,7 @@ void Ui::IsCameraOut()
 
 void Ui::Update()
 {
-    
+   
     // Scenes update.
     switch (mSId)
     {
