@@ -4,15 +4,13 @@
 #include <unordered_map>
 #include <vector>
 
-#include "tilemap.hpp"
+#include "tilemap_editor.hpp"
 
 #define MAX_UI_TEX  20
 
 #define MAX_UI_SFX  2
-#define MAX_UI_FONT 1
 
 // Forwards declaration.
-class Player;
 class Game;
 
 // Structures and enumeration.
@@ -52,6 +50,7 @@ class Button
 public:
     // Attributes.
     bool      isClickable;
+    bool      isActive;
     bool      displayTexture;
     int       fontSize;
     string    text;
@@ -74,44 +73,21 @@ public:
 
 
 class FileData
-  {
-  public:
+{
+public:
     Rectangle textBox = {0, 0, 225, 50};
     bool canWriteInBox = false;
     char name[9 + 1] = "\0"; // NOTE: One extra space required for null terminator char '\0'
     int letterCount = 0;
 
-    int width = 10;
-    int height = 10;
+    int width = 14;
+    int height = 12;
     bool saveTryEmpty = false;
     bool saveTryIncorect = false;
-  };
-
-class TexturedButton
-  {
-public:
-  // Attributes.
-    bool      isClickable;
-    bool      displayTexture;
-    bool isActive = false;
-    Rectangle rec;
-
-    Texture2D buttonTexture;
-
-
-    // Constructors / destructors.
-    TexturedButton();
-    TexturedButton(Rectangle _rec, Texture2D _tex);
-    ~TexturedButton() {}
-
-    // Methods.
-    bool IsHovered(CursorState& state);
-    bool IsClicked(CursorState& state);
-    void Draw(CursorState& state);
-  };
+};
 
 class TilePaint
-  {
+{
 public:
   // Attributes.
   bool      isClickable;
@@ -121,6 +97,7 @@ public:
   Texture2D tileTexture;
   vector<Rectangle> tileList;
   vector<Vector2> originalPostion;
+
   // Constructors / destructors.
   TilePaint();
   TilePaint(Rectangle _rec, Texture2D _tex, int sizeOfTile);
@@ -134,34 +111,29 @@ public:
   void Draw(CursorState& state);
 };
 
-class Ui //TODO: Fix multi res
+class Ui
 {
 public:
     // Main attributes.
     bool hasPutInformation = false;
     FileData fileData;
 
-    int selectedTool = 0; // 0 = nothing, 1 = pencil, 2 = eraser, 3 = flag;
-    bool      uiHovered = false;
-    int       onRightClick =0;
-    int       onLeftClick =0;
-    bool      hudIsActive = true;
+    int  selectedTool = 0; // 0 = nothing, 1 = pencil, 2 = eraser, 3 = flag;
+    int  onRightClick = 0;
+    int  onLeftClick  = 0;
 
-
-    float                            scroller               = 0.0f;
-    float                            renderScale            = 1.0f;
-    SceneId                          sId                    = SceneId::INTRO;
-    struct Animation                 aIntro                 = {0, 450};
-    CursorState                      cState                 = CursorState::NORMAL;
-    RenderTexture2D                  gameRenderTexture;
-    Camera2D                         inGameCamera           = {{0,0}, {0,0}, 0, 1};
-    Texture2D                        uiTexture[MAX_UI_TEX];
-    Sound                            uiSfx[MAX_UI_SFX];
-    Font                             uiFont[MAX_UI_FONT];
-    vector<LevelContainer>           levelsContainers;
-    unordered_map<string, Texture2D> levelsMetadata;
-    Game&                            gameRef;
-    Vector2 mouseWorldPosition;
+    bool             mIsCameraOut;
+    bool             mHudIsActive;
+    bool             mUiHovered;
+    SceneId          mSId;
+    struct Animation aIntro;
+    CursorState      cState;
+    Camera2D         mInGameCamera;
+    Texture2D        mUiTexture[MAX_UI_TEX];
+    Sound            mUiSfx[MAX_UI_SFX];
+    Font             mUiFont;
+    Game&            mGameRef;
+    Vector2          mouseWorldPosition;
 
     // Constructors / destructors.
     Ui(Game& game);
@@ -171,18 +143,18 @@ public:
 
     // Menu.
     void DrawMainMenu();
-    void DrawSelectMenu();
+    void DrawEditorMenu();
 
     // In game.
-    //TODO: BUILD MODE (Colored filter according to tiles state)
-    void DrawHUD(Player player);
+    void DrawHUD();
     void DrawInGame();
 
     // Global methods.
     void Init();
     void LoadLevel();
-    void Update();
     void DrawCursor();
-    void DrawOverlay(Player player);
-    void DrawRender(Player player);
+    void DrawOverlay();
+    void DrawRender();
+    void IsCameraOut();
+    void Update();
 };

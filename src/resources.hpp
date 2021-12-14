@@ -1,5 +1,8 @@
 #pragma once
+
 #include <unordered_map>
+#include <string>
+
 #include "raylib.h"
 
 using namespace std;
@@ -16,7 +19,6 @@ class Resource
     public:
 
         static const Texture2D&                 GetTexture(const string& name);
-        static const Texture2D&                 GetRenderTexture(const string& name);
         static const Font&                      GetFont(const string& name, int fontSize);
         static const Sound&                     GetSound(const string& name);
         static const Music&                     GetMusic(const string& name);

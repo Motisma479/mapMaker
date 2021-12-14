@@ -21,7 +21,6 @@ int main(void)
     
     Game game;
     Ui   ui(game);
-    
     ui.Init();  
 
     //-------------------------------------------
@@ -29,20 +28,20 @@ int main(void)
     // MAIN GAME LOOP.
     //-------------------------------------------
     
-    while(!WindowShouldClose()&& !game.needStop )
+    while(!WindowShouldClose() && !game.needStop )
     {
         ui.Update();
         game.UpdateGame(ui);
   
         BeginDrawing();
 
-            BeginMode2D(ui.inGameCamera);
+            BeginMode2D(ui.mInGameCamera);
 
                 ClearBackground(WHITE);
-                ui.DrawRender(game.player);
+                ui.DrawRender();
 
             EndMode2D();
-            ui.DrawOverlay(game.player);
+            ui.DrawOverlay();
 
         EndDrawing();
     }
@@ -51,8 +50,6 @@ int main(void)
     // DE-INITIALIZATION.
     //-------------------------------------------
     Resource::UnloadResource();
-    UnloadRenderTexture(ui.gameRenderTexture);
-
     CloseAudioDevice();
     
     CloseWindow();

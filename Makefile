@@ -1,7 +1,7 @@
 PROGRAM=editor
 
 # Add your objs to generate in OBJS var
-OBJS=   src/game.o src/main.o src/tilemap.o src/resources.o src/ui.o
+OBJS=   src/game.o src/main.o src/tilemap_editor.o src/resources.o src/ui.o
 
 CXX=g++
 TARGET=$(shell $(CXX) -dumpmachine)
